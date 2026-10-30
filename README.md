@@ -2,6 +2,20 @@
 
 A playable chess roguelite prototype for **Godot 4.8 beta 1**. Open `project.godot` and press **F6 on `main.tscn`**, or **F5** to run the project.
 
+## Parallel chess sandbox
+
+Open `scenes/sandbox/chess_sandbox.tscn` and press **F6** for the independent 8×8 chess experiment. **F5 still launches the original roguelite.** The sandbox never accesses its run, shops, skills, or player profile. This is the baseline for separately developing the more experimental pieces and board rules.
+
+The scene opens in **preparation** with a standard position. Press **Start battle** to begin. The free debug shop now has **Pieces**, **Units**, and **Board** tabs, including all accepted mechanics from the design notebook. Hover entries for descriptions. Pawns keep their types and positions; they can receive upgrades. Replacing, rearranging or upgrading a paired piece changes its mirror too. The standard king/queen center stays the exception. Paint terrain anywhere in your half. Hunter has been removed. Remove remains disabled.
+
+An ordinary build uses standard chess: king safety, checkmate, castling, en passant and four promotion choices, with automatic repetition/fifty-move draws. Experimental builds retain **check/checkmate for ordinary kings**; both Twin Regents must be captured. Stalemate draws for ordinary kings. Factories spawn **pawns**. Variant castling/en passant and automatic repetition/fifty-move draws remain disabled. **Next battle** restores your starting build and terrain, and introduces stronger themed opponents. Everything stays in the sandbox session with no profile writes.
+
+Select pieces and highlighted destinations. Enable **Ranged attack** for Guns; use **End bonus turn** to skip unused +1/+2 actions. Equipping Voidwalker reveals clickable purple void cells. Wheel to zoom, right-drag/arrows to pan, Home to return; distant units remain visible and selectable. Coordinate entry remains optional. The Conveyor Belt upgrade toggles a fixed clockwise roundabout across ranks 3 and 4, spanning the board width. Units advance one tile after each completed turn. The sidebar reports completed AI depth; Inspector settings retain the bounded search's depth, node and beam limits. Reset safely discards old worker results.
+
+See [the sandbox rule decisions](docs/chaos-sandbox.md) for the complete implementation inventory, provisional interactions, controls, AI limitations, architecture and test commands. The original game, run economy, and main entry scene stay independent.
+
+The standard chess suites remain `tests/chess_sandbox_rules.gd` and `tests/chess_sandbox_ui.gd`. Variant coverage is in `tests/chaos_sandbox_rules.gd`, `tests/chaos_fixes.gd`, `tests/chaos_setup_void_belts.gd`, and `tests/chaos_sandbox_ui.gd`; the UI runners support `-- --small`. Use `--log-file /tmp/schach2-sandbox.log` if the local Godot log directory is unavailable. Headless tests verify simulation and control geometry; rendered checks and human playtests are separate.
+
 ## Play
 
 The title screen has **New Run**, **Upgrades**, **Settings**, and **Exit**. Upgrades opens the permanent skill tree. Settings contains the optional run seed, fullscreen, and a toggle to pause the animated scenery. These display settings last for the current session. Tab and Enter navigate the menu; Escape closes a panel.
@@ -136,3 +150,7 @@ Godot ignores `art_sources/`. `tools/prepare_painted_terrain.py` copies the main
 ```
 
 Capture writes `/tmp/schach2-terrain-lab2.png` and the artwork alone to `/tmp/schach2-terrain-lab2-art.png`. Add `--intact` or `--no-pieces` after `--` to inspect those variants. The dedicated smoke test checks repeated seed output, connectivity across 120 seeds, preserved piece locations, projection round trips, exact shared floor vertices, piece origins, cached view reuse and control state. This verifies the art lab's construction, not gameplay balance or generated encounter solvability.
+
+## Experimental design notebook
+
+`output/pdf/chess-chaos-mechanics.pdf` tracks the separate brainstorming design, including Eldritch (moving removes the departed square). Its implementation appendix records the accepted mechanics now available in the sandbox and summarizes provisional rules. Rebuild with `tools/build_mechanics_brief.py` using Python with ReportLab and pypdf.
